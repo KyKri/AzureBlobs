@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -30,6 +31,12 @@ namespace blob_app
                     PublicAccess = BlobContainerPublicAccessType.Blob
                 };
                 await blobContainer.SetPermissionsAsync(blobPermissions);
+
+                // Create a file for upload
+                string currentDir = Directory.GetCurrentDirectory();
+                string fileName = "hello.txt";
+                string file = Path.Combine(currentDir, fileName);
+                await File.WriteAllTextAsync(file, "Hello, World!");
             }
             else
             {
