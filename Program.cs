@@ -21,6 +21,7 @@ namespace blob_app
             if (CloudStorageAccount.TryParse(connectionString, out storageAccount))
             {
                 // Create blob container if not already created
+                Console.WriteLine("Creating blob container");
                 CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer blobContainer = blobClient.GetContainerReference("my-container");
                 await blobContainer.CreateIfNotExistsAsync(); //To-do handle exception Microsoft.WindowsAzure.Storage.StorageException
@@ -33,16 +34,19 @@ namespace blob_app
                 await blobContainer.SetPermissionsAsync(blobPermissions);
 
                 // Create a file for upload
+                Console.WriteLine("Creating temp file");
                 string currentDir = Directory.GetCurrentDirectory();
                 string fileName = "hello.txt";
                 string file = Path.Combine(currentDir, fileName);
                 await File.WriteAllTextAsync(file, "Hello, World!");
 
                 // Upload the file to the blob container
+                Console.WriteLine("Uploading file");
                 CloudBlockBlob blockBlob = blobContainer.GetBlockBlobReference(fileName);
                 await blockBlob.UploadFromFileAsync(file);
 
                 // List blobs in the container
+                Console.WriteLine("Listing blobs in container:");
                 BlobContinuationToken token = null;
                 do 
                 {
@@ -50,11 +54,12 @@ namespace blob_app
                     token = results.ContinuationToken;
                     foreach (IListBlobItem item in results.Results)
                     {
-                        Console.WriteLine(item.Uri);
+                        Console.WriteLine("- " + item.Uri);
                     }
                 } while (token != null);
 
                 // Download the file from blob container
+                Console.WriteLine("Downloading file");
                 string downloadFile = file.Replace(".txt", "_downloaded.txt");
                 await blockBlob.DownloadToFileAsync(downloadFile, FileMode.Create);
 
