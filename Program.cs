@@ -22,7 +22,14 @@ namespace blob_app
                 // Create blob container if not already created
                 CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer blobContainer = blobClient.GetContainerReference("my-container");
-                await blobContainer.CreateIfNotExistsAsync();                
+                await blobContainer.CreateIfNotExistsAsync();
+
+                // Set access on the blob container
+                BlobContainerPermissions blobPermissions = new BlobContainerPermissions
+                {
+                    PublicAccess = BlobContainerPublicAccessType.Blob
+                };
+                await blobContainer.SetPermissionsAsync(blobPermissions);
             }
             else
             {
