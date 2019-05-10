@@ -19,7 +19,10 @@ namespace blob_app
             CloudStorageAccount storageAccount;
             if (CloudStorageAccount.TryParse(connectionString, out storageAccount))
             {
-                
+                // Create blob container if not already created
+                CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+                CloudBlobContainer blobContainer = blobClient.GetContainerReference("my-container");
+                await blobContainer.CreateIfNotExistsAsync();                
             }
             else
             {
