@@ -57,6 +57,18 @@ namespace blob_app
                 // Download the file from blob container
                 string downloadFile = file.Replace(".txt", "_downloaded.txt");
                 await blockBlob.DownloadToFileAsync(downloadFile, FileMode.Create);
+
+                // Delete blob container and files
+                Console.WriteLine("Blob container created, file uploaded, and copy downloaded.\n" +
+                    "Hit any key to delete resources.");
+                Console.ReadLine();
+                if (blobContainer != null)
+                {
+                    await blobContainer.DeleteIfExistsAsync();
+                }
+                File.Delete(file);
+                File.Delete(downloadFile);
+                Console.WriteLine("Blob container and files have been deleted.");
             }
             else
             {
