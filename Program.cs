@@ -23,7 +23,7 @@ namespace blob_app
                 // Create blob container if not already created
                 CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
                 CloudBlobContainer blobContainer = blobClient.GetContainerReference("my-container");
-                await blobContainer.CreateIfNotExistsAsync();
+                await blobContainer.CreateIfNotExistsAsync(); //To-do handle exception Microsoft.WindowsAzure.Storage.StorageException
 
                 // Set access on the blob container
                 BlobContainerPermissions blobPermissions = new BlobContainerPermissions
@@ -37,6 +37,10 @@ namespace blob_app
                 string fileName = "hello.txt";
                 string file = Path.Combine(currentDir, fileName);
                 await File.WriteAllTextAsync(file, "Hello, World!");
+
+                // Upload the file to the blob container
+                CloudBlockBlob blockBlob = blobContainer.GetBlockBlobReference(fileName);
+                await blockBlob.UploadFromFileAsync(file);
             }
             else
             {
