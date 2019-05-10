@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -8,8 +9,13 @@ namespace blob_app
     {
         static void Main(string[] args)
         {
-            string connectionString = Environment.GetEnvironmentVariable("storageconnectionstring");
+            BlobOperations().GetAwaiter().GetResult();
+        }
 
+        public static async Task BlobOperations()
+        {
+            string connectionString = Environment.GetEnvironmentVariable("storageconnectionstring");
+            
             CloudStorageAccount storageAccount;
             if (CloudStorageAccount.TryParse(connectionString, out storageAccount))
             {
