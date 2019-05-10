@@ -53,6 +53,10 @@ namespace blob_app
                         Console.WriteLine(item.Uri);
                     }
                 } while (token != null);
+
+                // Download the file from blob container
+                string downloadFile = file.Replace(".txt", "_downloaded.txt");
+                await blockBlob.DownloadToFileAsync(downloadFile, FileMode.Create);
             }
             else
             {
