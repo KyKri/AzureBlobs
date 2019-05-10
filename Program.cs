@@ -41,6 +41,18 @@ namespace blob_app
                 // Upload the file to the blob container
                 CloudBlockBlob blockBlob = blobContainer.GetBlockBlobReference(fileName);
                 await blockBlob.UploadFromFileAsync(file);
+
+                // List blobs in the container
+                BlobContinuationToken token = null;
+                do 
+                {
+                    var results = await blobContainer.ListBlobsSegmentedAsync(null, token);
+                    token = results.ContinuationToken;
+                    foreach (IListBlobItem item in results.Results)
+                    {
+                        Console.WriteLine(item.Uri);
+                    }
+                } while (token != null);
             }
             else
             {
